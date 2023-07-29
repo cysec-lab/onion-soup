@@ -49,7 +49,7 @@ jobs:
           sed -i 's/base: "."/base: "onion-soup"/g' vite.config.ts
 
       - name: Build
-        run: yarn build
+        run: yarn build && echo "dw.cysec-lab.org" > dist/CNAME
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
