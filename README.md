@@ -2,8 +2,12 @@
 
 # Darkweb Visualizer
 
-* for authenticatable users: [darkweb.ryuse.dev](https://darkweb.ryuse.dev/)
-* for general users: [preview.darkweb.ryuse.dev](https://preview.darkweb.ryuse.dev/)
+* for authenticatable users
+  * [darkweb.ryuse.dev](https://darkweb.ryuse.dev) (Vercel)
+* for general users
+  * [dw.cysec-lab.org](http://dw.cysec-lab.org) (GitHub Pages)
+  * [bk.dw.cysec-lab.org](http://bk.dw.cysec-lab.org) (Vercel)
+  * [preview.darkweb.ryuse.dev](https://preview.darkweb.ryuse.dev) (Vercel)
 
 ## for developers
 
