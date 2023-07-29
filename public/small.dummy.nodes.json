@@ -1,0 +1,17 @@
+[
+    {
+        "id": "0",
+        "server": "Apache2.4.57",
+        "domain": "foo.onion"
+    },
+    {
+        "id": "1",
+        "server": "Nginx1.25.1",
+        "domain": "bar.onion"
+    },
+    {
+        "id": "2",
+        "server": "Nginx1.21.2",
+        "domain": "hoge.onion"
+    }
+]
