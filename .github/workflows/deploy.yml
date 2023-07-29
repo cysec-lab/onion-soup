@@ -1,0 +1,58 @@
+name: Deploy
+on: [workflow_dispatch]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # checkout this repo
+      - uses: actions/checkout@v3 # checkout other private repo
+        with:
+          repository: cysec-lab/DarkwebVisualizer
+          token: ${{ secrets.ORG_GITHUB_PAT }}
+          path: private
+          ref: "main"
+
+      - name: Move private files
+        run: |
+          ls -a | grep -v -E '^\.$|^\.\.$|^private$|^\.git$|^\.github$' | xargs rm -rf
+          ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
+          rm -rf private
+          rm public/nodes.json public/edges.json
+
+      - name: Commit and Push
+        continue-on-error: true
+        run: |
+          git config --global user.name "actions-user"
+          git config --global user.email "action@github.com"
+          git add .
+          git commit -m "deploy: ${{ github.sha }}"
+          git push origin main
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Change Vite basepath
+        run: |
+          sed -i 's/base: "."/base: "onion-soup"/g' vite.config.ts
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
