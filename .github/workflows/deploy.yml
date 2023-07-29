@@ -16,8 +16,8 @@ jobs:
 
       - name: Move private files
         run: |
-          ls -a | grep -v -E '^\.$|^\.\.$|^private$|^\.git$|^\.github$' | xargs rm -rf
-          ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
+          ls -a | grep -v -E '^\.$|^\.\.$|^private$|^\.git$|^\.github|^README.md$$' | xargs rm -rf
+          ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$|^private/README.md$' | xargs -i mv {} .
           rm -rf private
           rm public/nodes.json public/edges.json
 
