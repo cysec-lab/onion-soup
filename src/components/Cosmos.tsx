@@ -1,11 +1,12 @@
 import { Graph, GraphConfigInterface } from "@cosmograph/cosmos";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { InputLink, InputNode } from "../types/graph";
 import { fetchLink, fetchNode } from "../utils/fetchDatset";
 import Controls from "./Controls";
 import Status from "./Status";
 import Loading from "./Loading";
 import NodeInfo from "./NodeInfo";
+import { NodeLinkContext } from "../context/NodeLinkContext";
 
 function drawGraph(
   nodes: InputNode[],
@@ -29,16 +30,18 @@ function drawGraph(
 function Cosmos() {
   // Cosmos state
   const [graph, setGraph] = useState<Graph<InputNode, InputLink> | null>(null);
-  const [nodeSize, setNodeSize] = useState<number | null>(null);
-  const [linkSize, setLinkSize] = useState<number | null>(null);
 
   // Loading state
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingMsg, setLoadingMsg] = useState<string>("Starting up...");
 
   // NodeInfo state
-  const [laseSelected, setLastSelected] = useState<InputNode | null>(null);
+  const [lastSelected, setLastSelected] = useState<InputNode | null>(null);
   const [lastClicked, setLastClicked] = useState<InputNode | null>(null);
+
+  // Nodes and Links context
+  const { setNodes, setLinks, setNodeSize, setLinkSize } =
+    useContext(NodeLinkContext);
 
   const config: GraphConfigInterface<InputNode, InputLink> = {
     backgroundColor: "#151515",
@@ -83,6 +86,8 @@ function Cosmos() {
       .then(({ nodes, links }) => {
         setLoadingMsg("Drawing Graph...");
         const g = drawGraph(nodes, links, config);
+        setNodes(nodes);
+        setLinks(links);
         setNodeSize(nodes.length);
         setLinkSize(links.length);
         setGraph(g);
@@ -98,11 +103,11 @@ function Cosmos() {
   return (
     <div>
       <Controls loading={loading} graph={graph} config={config} />
-      <Status nodeSize={nodeSize} linkSize={linkSize} />
+      <Status />
       <Loading loading={loading} message={loadingMsg} />
       <NodeInfo
         loading={loading}
-        lastSelected={laseSelected}
+        lastSelected={lastSelected}
         lastClicked={lastClicked}
       />
       <div id="cosmos"></div>

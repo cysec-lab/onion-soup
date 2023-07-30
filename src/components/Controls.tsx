@@ -10,9 +10,13 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Tooltip,
+  IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import DrawerMenu from "./Drawer";
 
 type NodeSizeProps = {
   graph: Graph<InputNode, InputLink> | null;
@@ -62,10 +66,25 @@ type ControlsProps = {
 
 const Controls = ({ loading, graph, config }: ControlsProps) => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box w="100%" p={4} bg="#252525" position={"fixed"} top="0">
+      <DrawerMenu isOpen={isOpen} onClose={onClose} />
       <Stack direction="row">
+        <Box textAlign="center">
+          <IconButton
+            aria-label="Open Menu"
+            variant="outline"
+            mr="10px"
+            size="lg"
+            borderColor="#eee"
+            _hover={{ bg: "#252525" }}
+            icon={<HamburgerIcon color="white" />}
+            onClick={onOpen}
+            isDisabled={loading}
+          />
+        </Box>
         <Box textAlign="center">
           <FormLabel
             htmlFor="simulate"

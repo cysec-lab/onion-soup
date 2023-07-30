@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import { DarkModeProvider } from "./context/DarkModeContext";
+import { NodeLinkProvider } from "./context/NodeLinkContext";
 import App from "./App";
 import "./index.css";
 
@@ -10,7 +11,9 @@ const root = createRoot(container);
 root.render(
   <ChakraProvider>
     <DarkModeProvider>
-      <App />
+      <NodeLinkProvider>
+        <App />
+      </NodeLinkProvider>
     </DarkModeProvider>
   </ChakraProvider>,
 );

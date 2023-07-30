@@ -8,14 +8,11 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { NodeLinkContext } from "../context/NodeLinkContext";
 
-type StatusProps = {
-  nodeSize: number | null;
-  linkSize: number | null;
-};
-
-const Status = ({ nodeSize, linkSize }: StatusProps) => {
+const Status = () => {
   const { darkMode } = useContext(DarkModeContext);
+  const { nodeSize, linkSize } = useContext(NodeLinkContext);
   const textColor = darkMode ? "#eee" : "#333";
   return (
     <Box position="fixed" bottom="0" color={textColor}>
