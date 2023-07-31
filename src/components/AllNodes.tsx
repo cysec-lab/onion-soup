@@ -11,6 +11,7 @@ import {
   Td,
   TableContainer,
   IconButton,
+  Button,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { DisabledNodesT, ServerT } from "./Drawer";
@@ -67,6 +68,39 @@ function AllNodes({
         placeholder="Search"
         onChange={(e) => setSearch(e.target.value)}
       />
+      <Stack spacing={3} direction="row">
+        <Button
+          colorScheme="blue"
+          size="xs"
+          w="50%"
+          isDisabled={Object.keys(disabledNodes).length === tmpStat.length}
+          onClick={() => {
+            const newDisabledNodes: DisabledNodesT = {};
+            tmpStat.forEach(({ server }) => {
+              newDisabledNodes[server] = true;
+            });
+            setDisabledNodes(newDisabledNodes);
+            setCanApply(true);
+          }}
+        >
+          <ViewOffIcon mr="2px" />
+          All Nodes Disabled
+        </Button>
+        <Button
+          colorScheme="blue"
+          size="xs"
+          w="50%"
+          isDisabled={Object.keys(disabledNodes).length === 0}
+          disabled={true}
+          onClick={() => {
+            setDisabledNodes({});
+            setCanApply(true);
+          }}
+        >
+          <ViewIcon mr="2px" />
+          All Nodes Enabled
+        </Button>
+      </Stack>
       {/* FIXME: なんかThのサイズを適当なpxにするとそれなりに綺麗に描画されるが、%にするとだめ、謎 */}
       <TableContainer overflowX="unset" overflowY="unset">
         <Table variant="simple" size="sm">
