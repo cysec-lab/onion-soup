@@ -17,6 +17,7 @@ import { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import DrawerMenu from "./Drawer";
+import { GraphContext } from "../context/GraphContext";
 
 type NodeSizeProps = {
   graph: Graph<InputNode, InputLink> | null;
@@ -60,11 +61,11 @@ const NodeSizeSlider = ({ graph, config }: NodeSizeProps) => {
 
 type ControlsProps = {
   loading: boolean;
-  graph: Graph<InputNode, InputLink> | null;
   config: GraphConfigInterface<InputNode, InputLink>;
 };
 
-const Controls = ({ loading, graph, config }: ControlsProps) => {
+const Controls = ({ loading, config }: ControlsProps) => {
+  const { graph } = useContext(GraphContext);
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 

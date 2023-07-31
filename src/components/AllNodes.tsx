@@ -10,24 +10,32 @@ import {
   Th,
   Td,
   TableContainer,
-  Icon,
+  IconButton,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { DisabledNodesT, ServerT } from "./Drawer";
 
 type StatVal = {
   color: string;
   count: number;
 };
 
-type Server = string;
-
 type TmpStatT = {
-  server: Server;
+  server: ServerT;
   stat: StatVal;
 }[];
 
-function Statistics() {
+function AllNodes({
+  disabledNodes,
+  setDisabledNodes,
+  setCanApply,
+}: {
+  disabledNodes: DisabledNodesT;
+  setDisabledNodes: (disabledNodes: DisabledNodesT) => void;
+  setCanApply: (canApply: boolean) => void;
+}) {
   const { nodes } = useContext(NodeLinkContext);
-  const stat = new Map<Server, StatVal>();
+  const stat = new Map<ServerT, StatVal>();
   const [tmpStat, setTmpStat] = useState<TmpStatT>([]);
   const [search, setSearch] = useState<string>("");
 
@@ -51,15 +59,6 @@ function Statistics() {
     tmpStat.sort((a, b) => b.stat.count - a.stat.count);
     setTmpStat(tmpStat);
   }, [nodes]);
-
-  const Circle = ({ color }: { color: string }) => (
-    <Icon viewBox="0 0 200 200" color={color}>
-      <path
-        fill="currentColor"
-        d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-      />
-    </Icon>
-  );
 
   return (
     <Stack spacing={3}>
@@ -91,21 +90,44 @@ function Statistics() {
                   ? server.toLowerCase().includes(search.toLowerCase())
                   : true,
               )
-              .map(({ server, stat }) => (
-                <Tr>
-                  <Td maxW="20px" overflowX="scroll">
-                    <Circle color={stat.color} />
-                    {server.length ? server : "(unknown)"}
-                  </Td>
-                  <Td maxW="20px" isNumeric>
-                    {stat.count}
-                  </Td>
-                </Tr>
-              ))}
+              .map(({ server, stat }) => {
+                const isDisabled = disabledNodes?.[server];
+                return (
+                  <Tr>
+                    <Td
+                      maxW="20px"
+                      overflowX="scroll"
+                      textDecoration={isDisabled ? "line-through" : "none"}
+                    >
+                      <IconButton
+                        aria-label="show-node"
+                        icon={isDisabled ? <ViewOffIcon /> : <ViewIcon />}
+                        size="sm"
+                        mr="2px"
+                        color={stat.color}
+                        onClick={() => {
+                          const newDisabledNodes = { ...disabledNodes };
+                          if (newDisabledNodes[server] === undefined) {
+                            newDisabledNodes[server] = true;
+                          } else {
+                            delete newDisabledNodes[server];
+                          }
+                          setDisabledNodes(newDisabledNodes);
+                          setCanApply(true);
+                        }}
+                      />
+                      {server.length ? server : "(empty)"}
+                    </Td>
+                    <Td maxW="20px" isNumeric>
+                      {stat.count}
+                    </Td>
+                  </Tr>
+                );
+              })}
           </Tbody>
         </Table>
       </TableContainer>
     </Stack>
   );
 }
-export default Statistics;
+export default AllNodes;

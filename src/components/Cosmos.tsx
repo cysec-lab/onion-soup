@@ -7,6 +7,7 @@ import Status from "./Status";
 import Loading from "./Loading";
 import NodeInfo from "./NodeInfo";
 import { NodeLinkContext } from "../context/NodeLinkContext";
+import { GraphContext } from "../context/GraphContext";
 
 function drawGraph(
   nodes: InputNode[],
@@ -28,10 +29,8 @@ function drawGraph(
 }
 
 function Cosmos() {
-  // Cosmos state
-  const [graph, setGraph] = useState<Graph<InputNode, InputLink> | null>(null);
-
   // Loading state
+  const { setGraph } = useContext(GraphContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingMsg, setLoadingMsg] = useState<string>("Starting up...");
 
@@ -102,7 +101,7 @@ function Cosmos() {
 
   return (
     <div>
-      <Controls loading={loading} graph={graph} config={config} />
+      <Controls loading={loading} config={config} />
       <Status />
       <Loading loading={loading} message={loadingMsg} />
       <NodeInfo
