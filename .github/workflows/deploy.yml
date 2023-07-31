@@ -44,10 +44,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Change Vite basepath
-        run: |
-          sed -i 's/base: "\/"/base: "onion-soup"/g' vite.config.ts
-
       - name: Build
         run: yarn build && echo "dw.cysec-lab.org" > dist/CNAME
 
