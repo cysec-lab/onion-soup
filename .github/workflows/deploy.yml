@@ -43,6 +43,9 @@ jobs:
           key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+        
+      - name: Replace package.json content
+        run: sed -i -e 's/--mode dev/--mode production/g' package.json
 
       - name: Build
         run: yarn build && echo "dw.cysec-lab.org" > dist/CNAME
